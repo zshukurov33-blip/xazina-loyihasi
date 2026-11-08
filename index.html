@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xazina Dashboard - Aqlli Moliya Tizimi</title>
+    
+    <link rel="stylesheet" href="https://cloudflare.com">
+    
+    <script src="https://jsdelivr.net"></script>
+    <style>
+        :root {
+            --bg-color: #f4f6f9;
+            --sidebar-color: #0f172a;
+            --text-dark: #1e293b;
+            --text-gray: #64748b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --primary: #0284c7; 
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+       
+        .sidebar {
+            width: 260px;
+            background-color: var(--sidebar-color);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            padding: 25px 20px;
+            justify-content: space-between;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 22px;
+            font-weight: 700;
+            color: #f8fafc;
+        }
+
+        .brand i {
+            color: #0ea5e9;
+        }
+
+        .menu-list {
+            list-style: none;
+            margin-top: 40px;
+            flex: 1;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px 15px;
+            color: #94a3b8;
+            text-decoration: none;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+
+        .menu-item:hover, .menu-item.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-top: 1px solid #334155;
+            padding-top: 20px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: white;
+        }
+
+       
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            height: 100vh;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .welcome-text h1 { font-size: 26px; font-weight: 700; }
+        .welcome-text p { color: var(--text-gray); font-size: 14px; margin-top: 4px; }
+
+       
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+        }
+
+        @media (max-width: 1024px) {
+            .dashboard-grid { grid-template-columns: 1fr; }
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+       
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .credit-card {
+            height: 180px;
+            border-radius: 16px;
+            padding: 20px;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .credit-card:hover { transform: translateY(-4px); box-shadow: 0 15px 30px rgba(0,0,0,0.1); }
+
+        .card-anor { background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); }
+        .card-visa { background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%); }
+
+        .card-header { display: flex; justify-content: space-between; align-items: center; }
+        .card-type { font-weight: 700; font-style: italic; font-size: 18px; }
+        .card-balance { font-size: 24px; font-weight: 700; margin-top: 10px; }
+        .card-number { font-size: 16px; letter-spacing: 2px; font-family: monospace; opacity: 0.8; }
+        .card-holder { font-size: 12px; text-transform: uppercase; opacity: 0.7; }
+
+      
+        .chart-card, .transfer-card, .history-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.01), 0 2px 4px -1px rgba(0,0,0,0.01);
+            margin-bottom: 30px;
+        }
+
+       
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            color: var(--text-gray);
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+
+        .form-control, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            outline: none;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+
+        .form-control:focus, select:focus {
+            border-color: var(--primary);
+        }
+
+        .btn-transfer {
+            width: 100%;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 10px;
+        }
+
+        .btn-transfer:hover { background: #0369a1; }
+
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .history-item:last-child { border-bottom: none; padding-bottom: 0; }
+
+        .item-left { display: flex; align-items: center; gap: 15px; }
+        .icon-box {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .icon-expense { background: #fee2e2; color: var(--danger); }
+        .icon-income { background: #d1fae5; color: var(--success); }
+
+        .item-details h4 { font-size: 14px; font-weight: 600; }
+        .item-details p { font-size: 12px; color: var(--text-gray); margin-top: 2px; }
+
+        .item-amount { font-weight: 700; font-size: 15px; }
+        .amount-expense { color: var(--danger); }
+        .amount-income { color: var(--success); }
+    </style>
+</head>
+<body>
+
+
+    <div class="sidebar">
+        <div>
+            <div class="brand">
+                <i class="fa-solid fa-vault"></i>
+                <span>Xazina Pay</span>
+            </div>
+            <ul class="menu-list">
+                <li><a href="#" class="menu-item active"><i class="fa-solid fa-chart-pie"></i> Dashboard</a></li>
+                <li><a href="#" class="menu-item"><i class="fa-solid fa-credit-card"></i> Kartalarim</a></li>
+                <li><a href="#" class="menu-item"><i class="fa-solid fa-money-bill-transfer"></i> O'tkazmalar</a></li>
+                <li><a href="#" class="menu-item"><i class="fa-solid fa-clock-rotate-left"></i> Monitor xizmati</a></li>
+                <li><a href="#" class="menu-item"><i class="fa-solid fa-gear"></i> Sozlamalar</a></li>
+            </ul>
+        </div>
+        <div class="user-profile">
+            <div class="user-avatar">AZ</div>
+            <div>
+                <h4 style="font-size: 14px;">Asilbek Ziyodov</h4>
+                <p style="font-size: 12px; color: #94a3b8;">Premium Foydalanuvchi</p>
+            </div>
+        </div>
+    </div>
+
+  
+    <div class="main-content">
+        <header>
+            <div class="welcome-text">
+                <h1>Xush kelibsiz, Asilbek!</h1>
+                <p>Xazina platformasidagi joriy hisob-kitoblaringiz.</p>
+            </div>
+            <div style="font-size: 14px; background: white; padding: 10px 15px; border-radius: 8px; font-weight: 500; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
+                Sana: <span id="currentDate">09.11.2026</span>
+            </div>
+        </header>
+
+        <div class="dashboard-grid">
+         
+            <div>
+                <div class="section-title">Mening hamyonlarim <span>+ Yangi karta</span></div>
+                <div class="cards-container">
+               
+                    <div class="credit-card card-anor" onclick="selectCard(0)">
+                        <div class="card-header">
+                            <div>
